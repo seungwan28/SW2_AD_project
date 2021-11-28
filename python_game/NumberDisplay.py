@@ -290,3 +290,5 @@ class NumberDisplay:
     def increaseIndex(self, call):
         self.startIndex += int(call)
 
+    def decreaseIndex(self, call):
+        self.startIndex -= int(call)

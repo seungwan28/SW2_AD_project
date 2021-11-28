@@ -36,7 +36,6 @@ class BaskinRobbins(QWidget):
         statusLayout.addWidget(self.firstButton, 0, 0, 1, 2)
         statusLayout.addWidget(self.laterButton, 0, 1, 1, 2)
 
-
         # 사용자의 입력 위젯
         statusLayout.addWidget(QLabel('Player'), 1, 0)
         self.playerInput = QLineEdit()
@@ -73,17 +72,14 @@ class BaskinRobbins(QWidget):
         mainLayout.addLayout(statusLayout, 0, 1)
 
         self.setLayout(mainLayout)
-
         self.setWindowTitle('Baskin Robbins 31')
 
-        # 게임 시작
         self.show()
         self.startGame()
 
-
+    # 게임 시작
     def startGame(self):
         self.numberDisplay = NumberDisplay()
-        self.gameOver = False
         self.numberDisplay.startIndex = 0
 
         self.numberWindow.setPlaceholderText(self.numberDisplay.currentIndex())
@@ -97,62 +93,62 @@ class BaskinRobbins(QWidget):
         self.playerInput.clear()
 
         if len(self.playerCall) != 1:
-            self.computerInput.setText("Enter number 1~3")
+            self.computerInput.setText("Enter 1, 2, 3")
             return
 
         if self.playerCall.isdigit() == False:
-            self.computerInput.setText("Enter number 1~3")
+            self.computerInput.setText("Enter 1, 2, 3")
             return
 
-        self.playerPlay()
+        if self.playerCall in ['1', '2', '3']:
+            self.playerPlay()
+        else:
+            self.computerInput.setText("Enter 1, 2, 3")
+            return
 
 
     #선공
     def firstClicked(self):
         self.computerInput.setText("Player turn")
 
-    #후공 및 선택한 난이도의 실행
+
+    #후공
     def laterClicked(self):
         if self.difficulty.currentIndex() == 0:
             self.computerPlay()
         elif self.difficulty.currentIndex() == 1:
-            self.hardDifficulty()
+            self.advancedComputerPlay()
+
 
     #난이도 설정
     def difficultyChoice(self):
         if self.difficulty.currentIndex() == 0:
-            self.normalDifficulty()
-            self.startGame()
+            self.computerPlay()
+            self.numberDisplay.decreaseIndex(int(self.computerCall))
+            self.computerInput.clear()
+            self.numberWindow.setText(self.numberDisplay.currentIndex())
         elif self.difficulty.currentIndex() == 1:
-            self.hardDifficulty()
-            self.startGame()
-
-    #보통 난이도
-    def normalDifficulty(self):
-        self.computerPlay()
-
-    #어려움 난이도
-    def hardDifficulty(self):
-        self.advancedComputerPlay()
+            self.advancedComputerPlay()
+            self.numberDisplay.decreaseIndex(int(self.computerCall))
+            self.computerInput.clear()
+            self.numberWindow.setText(self.numberDisplay.currentIndex())
 
 
     #사용자의 입력 후 바로 컴퓨터 출력
     def playerPlay(self):
         try:
-            if self.playerCall in ['1', '2', '3']:
-                self.numberDisplay.increaseIndex(self.playerCall)
-                self.numberWindow.setText(self.numberDisplay.currentIndex())
-                if self.numberDisplay.getIndex() >= 31:
-                    self.computerInput.setText("Com win!")
-                else:
-                    self.laterClicked()
-            else:
-                self.computerInput.setText("Enter number 1~3")
-                return
+            self.numberDisplay.increaseIndex(self.playerCall)
+            self.numberWindow.setText(self.numberDisplay.currentIndex())
 
-        except:
-            self.computerInput.setText("Press New game")
+            if self.numberDisplay.getIndex() >= 31:
+                    self.computerInput.setText("Com win!")
+            else:
+                self.laterClicked()
+
+        except IndexError:
+            self.computerInput.setText("Press New Game")
             pass
+
 
     #보통 난이도 컴퓨터의 출력
     def computerPlay(self):
@@ -163,52 +159,45 @@ class BaskinRobbins(QWidget):
                 self.computerCall = '2'
             elif self.numberDisplay.getIndex() == 29:
                 self.computerCall = '1'
-            elif self.numberDisplay.getIndex() == 30:
-                self.computerCall = '1'
             else:
                 self.computerCall = str(random.randint(1, 3))
             self.computerInput.setText(self.computerCall)
             self.numberDisplay.increaseIndex(self.computerCall)
             self.numberWindow.setText(self.numberDisplay.currentIndex())
-            if self.numberDisplay.getIndex() >= 31:
-                self.computerInput.setText(("Player win!"))
 
-        except:
-            self.computerInput.setText("Press New game")
+            if self.numberDisplay.getIndex() >= 31:
+                self.computerInput.setText("Player win!")
+
+        except IndexError:
+            self.computerInput.setText("Press New Game")
             pass
+
 
     #어려움 난이도 컴퓨터의 출력
     def advancedComputerPlay(self):
         try:
             numList = [2, 6, 10, 14, 18, 22, 26, 30]
-            print(self.numberDisplay.getIndex())
             if self.numberDisplay.getIndex() == 0:
                 self.computerCall = '2'
-            elif self.numberDisplay.getIndex() + 1 in numList:
+            elif self.numberDisplay.getIndex() + 1 in numList or self.numberDisplay.getIndex() == 29:
                 self.computerCall = '1'
-            elif self.numberDisplay.getIndex() + 2 in numList:
+            elif self.numberDisplay.getIndex() + 2 in numList or self.numberDisplay.getIndex() == 28:
                 self.computerCall = '2'
-            elif self.numberDisplay.getIndex() + 3 in numList:
+            elif self.numberDisplay.getIndex() + 3 in numList or self.numberDisplay.getIndex() == 27:
                 self.computerCall = '3'
-            elif self.numberDisplay.getIndex() == 27:
-                self.computerCall = '3'
-            elif self.numberDisplay.getIndex() == 28:
-                self.computerCall = '2'
-            elif self.numberDisplay.getIndex() == 29:
-                self.computerCall = '1'
-            elif self.numberDisplay.getIndex() == 30:
-                self.computerCall = '1'
             else:
                 self.computerCall = str(random.randint(1, 3))
             self.computerInput.setText(self.computerCall)
             self.numberDisplay.increaseIndex(self.computerCall)
             self.numberWindow.setText(self.numberDisplay.currentIndex())
-            if self.numberDisplay.getIndex() >= 31:
-                self.computerInput.setText(("Player win!"))
 
-        except:
-            self.computerInput.setText("Press New game")
+            if self.numberDisplay.getIndex() >= 31:
+                self.computerInput.setText("Player win!")
+
+        except IndexError:
+            self.computerInput.setText("Press New Game")
             pass
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

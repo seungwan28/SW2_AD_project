@@ -148,21 +148,23 @@ class BaskinRobbins(QWidget):
         except IndexError:
             self.computerInput.setText("Press New Game")
             pass
+
+
     #시간 지연
     def sleep(self,time):
-        QtTest.QTest.qWait(time * 1000)
+        QtTest.QTest.qWait(time * 500)
+
 
     #보통 난이도 컴퓨터의 출력
     def computerPlay(self):
         try:
-            if self.numberDisplay.getIndex() == 27:
-                self.computerCall = '3'
-            elif self.numberDisplay.getIndex() == 28:
-                self.computerCall = '2'
-            elif self.numberDisplay.getIndex() == 29:
-                self.computerCall = '1'
+            for i in range(1,4):
+                if self.numberDisplay.getIndex() == 30 - i:
+                    self.computerCall = str(i)
+                    break
             else:
                 self.computerCall = str(random.randint(1, 3))
+
             self.computerInput.setText(self.computerCall)
             self.numberDisplay.increaseIndex(self.computerCall)
             self.numberWindow.setText(self.numberDisplay.currentIndex())
@@ -179,16 +181,13 @@ class BaskinRobbins(QWidget):
     def advancedComputerPlay(self):
         try:
             numList = [2, 6, 10, 14, 18, 22, 26, 30]
-            if self.numberDisplay.getIndex() == 0:
-                self.computerCall = '2'
-            elif self.numberDisplay.getIndex() + 1 in numList or self.numberDisplay.getIndex() == 29:
-                self.computerCall = '1'
-            elif self.numberDisplay.getIndex() + 2 in numList or self.numberDisplay.getIndex() == 28:
-                self.computerCall = '2'
-            elif self.numberDisplay.getIndex() + 3 in numList or self.numberDisplay.getIndex() == 27:
-                self.computerCall = '3'
+            for i in range(1,4):
+                if self.numberDisplay.getIndex() + i in numList or self.numberDisplay.getIndex() == 30 - i:
+                    self.computerCall = str(i)
+                    break
             else:
                 self.computerCall = str(random.randint(1, 3))
+
             self.computerInput.setText(self.computerCall)
             self.numberDisplay.increaseIndex(self.computerCall)
             self.numberWindow.setText(self.numberDisplay.currentIndex())

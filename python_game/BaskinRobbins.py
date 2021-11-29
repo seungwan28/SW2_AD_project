@@ -1,4 +1,5 @@
 import sys, random
+from PyQt5 import QtTest
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QWidget,  QGridLayout, QLabel, QLineEdit, QTextEdit,
                              QToolButton, QComboBox)
@@ -10,7 +11,6 @@ class BaskinRobbins(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setGeometry(300, 300, 380, 150)
-
         # 숫자 디스플레이
         self.numberWindow = QTextEdit()
         self.numberWindow.setReadOnly(True)
@@ -139,16 +139,18 @@ class BaskinRobbins(QWidget):
         try:
             self.numberDisplay.increaseIndex(self.playerCall)
             self.numberWindow.setText(self.numberDisplay.currentIndex())
-
             if self.numberDisplay.getIndex() >= 31:
                     self.computerInput.setText("Com win!")
             else:
+                self.sleep(1)
                 self.laterClicked()
 
         except IndexError:
             self.computerInput.setText("Press New Game")
             pass
 
+    def sleep(self,time):
+        QtTest.QTest.qWait(time * 1000)
 
     #보통 난이도 컴퓨터의 출력
     def computerPlay(self):

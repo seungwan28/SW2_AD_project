@@ -148,7 +148,7 @@ class BaskinRobbins(QWidget):
         except IndexError:
             self.computerInput.setText("Press New Game")
             pass
-
+    #시간 지연
     def sleep(self,time):
         QtTest.QTest.qWait(time * 1000)
 
